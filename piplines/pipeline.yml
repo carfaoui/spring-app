@@ -4,41 +4,56 @@ resources:
   - name: project-app
     type: git
     source:
-      uri: (( repository-url ))
-      branch: (( branch ))
-      email: (( git-email )) 
-      username: (( git-username ))
-      password: (( git-password ))
-
-
-
-  - name: project-ci
-    type: git
-    source:
-      uri: (( repository-url ))
-      branch: (( branch ))
-      email: (( git-email ))
-      username: (( git-username ))
-      password: (( git-password ))
-      paths:
-        - pipelines
-
-  - name: openjdk
-    type: registry-image
+      uri: ((repository-url))
+      branch: ((branch))
+      email: ((git-email)) 
+      username: ((git-username))
+      password: ((git-password))
+  - name: app-image
+    type: docker-image
     icon: docker
     source:
-      repository: openjdk
-      tag: "8-jdk-alpine"     
-    
+      email: ((docker-email))
+      username: ((docker-username))
+      password: ((docker-password))
+      repository: carfaoui/spring-app
+
 jobs:
 - name: build
   plan:
   - get: project-app
     trigger: true
-  - get: project-ci
-    trigger: true
-  - get: openjdk
-    trigger : true   
-  - task: build
-    file: project-ci/tasks/build-main.yml
 
+  - task: mvn install
+    config:
+      platform: linux
+      inputs:
+        - name: project-app
+      outputs:
+        - name: project-app
+      image_resource:
+        type: registry-image
+        source:
+          repository: maven
+          tag: 3-jdk-8
+      run:
+        path: mvn
+        args: [clean, install]
+        dir: project-app
+
+  - task: debug
+    config:
+      platform: linux
+      inputs:
+        - name: project-app
+      image_resource:
+        type: registry-image
+        source:
+          repository: alpine
+      run:
+        path: ls
+        dir: project-app
+
+  - put: app-image
+    params:
+      build: project-app
