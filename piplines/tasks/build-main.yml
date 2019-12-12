@@ -1,0 +1,8 @@
+---
+platform: linux
+
+inputs:
+- name: build 
+
+run:
+  path: build-main.sh
