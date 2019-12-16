@@ -16,21 +16,21 @@ resources:
       email: ((docker-email))
       username: ((docker-username))
       password: ((docker-password))
-      repository: carfaoui/spring-app
+      repository: ((docker-repo))
 
 jobs:
-- name: build
+- name: tests
   plan:
   - get: project-app
     trigger: true
 
-  - task: mvn install
+  - task: test
     config:
-      platform: linux
       inputs:
         - name: project-app
       outputs:
         - name: project-app
+      platform: linux
       image_resource:
         type: registry-image
         source:
@@ -38,10 +38,10 @@ jobs:
           tag: 3-jdk-8
       run:
         path: mvn
-        args: [clean, install]
+        args: [test]
         dir: project-app
 
-  - task: debug
+  - task: debug-test
     config:
       platform: linux
       inputs:
@@ -53,6 +53,42 @@ jobs:
       run:
         path: ls
         dir: project-app
+
+- name: build-app
+  plan:
+  - get: project-app
+    trigger: true
+    passed: [tests]
+
+    #- task: build
+    #- config:
+    #-   inputs:
+    #-     - name: project-app
+    #-   outputs:
+    #-     - name: project-app
+    #-   platform: linux     
+    #-   image_resource:
+    #-     type: registry-image
+    #-     source:
+    #-       repository: maven
+    #-       tag: 3-jdk-8
+    #-   run:      
+    #-     path: mvn
+    #-     args: [clean, install]
+    #-     dir: project-app
+
+    #- task: debug-build
+    #- config:
+    #-   platform: linux
+    #-   inputs:
+    #-     - name: project-app
+    #-   image_resource:
+    #-     type: registry-image
+    #-     source:
+    #-       repository: alpine
+    #-   run:
+    #-     path: ls
+    #-     dir: project-app
 
   - put: app-image
     params:

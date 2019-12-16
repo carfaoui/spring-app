@@ -2,8 +2,11 @@ branch: master
 git-email: arfaouichaima25@gmail.com
 git-username: carfaoui
 git-password: A$aiw17#
+git-token: 60930770f63d26439ee0928cb3097d2f30528de3
 repository-url: https://github.com/carfaoui/spring-app.git
+docker-repo: carfaoui/spring-app
 docker-email: arfaouichaima25@gmail.com
 docker-username: carfaoui
 docker-password: A$aiw17#
+
 
