@@ -1,4 +1,4 @@
-# Concouse CI Pipeline definition for Spring Boot
+# Concourse CI Pipeline definition for application
 
 resources:
   - name: project-app
@@ -41,54 +41,11 @@ jobs:
         args: [test]
         dir: project-app
 
-  - task: debug-test
-    config:
-      platform: linux
-      inputs:
-        - name: project-app
-      image_resource:
-        type: registry-image
-        source:
-          repository: alpine
-      run:
-        path: ls
-        dir: project-app
-
 - name: build-app
   plan:
   - get: project-app
     trigger: true
     passed: [tests]
-
-    #- task: build
-    #- config:
-    #-   inputs:
-    #-     - name: project-app
-    #-   outputs:
-    #-     - name: project-app
-    #-   platform: linux     
-    #-   image_resource:
-    #-     type: registry-image
-    #-     source:
-    #-       repository: maven
-    #-       tag: 3-jdk-8
-    #-   run:      
-    #-     path: mvn
-    #-     args: [clean, install]
-    #-     dir: project-app
-
-    #- task: debug-build
-    #- config:
-    #-   platform: linux
-    #-   inputs:
-    #-     - name: project-app
-    #-   image_resource:
-    #-     type: registry-image
-    #-     source:
-    #-       repository: alpine
-    #-   run:
-    #-     path: ls
-    #-     dir: project-app
 
   - put: app-image
     params:
