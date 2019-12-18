@@ -19,33 +19,33 @@ resources:
       repository: ((docker-repo))
 
 jobs:
-- name: tests
-  plan:
-  - get: project-app
-    trigger: true
-
-  - task: test
-    config:
-      inputs:
-        - name: project-app
-      outputs:
-        - name: project-app
-      platform: linux
-      image_resource:
-        type: registry-image
-        source:
-          repository: maven
-          tag: 3-jdk-8
-      run:
-        path: mvn
-        args: [test]
-        dir: project-app
+#- name: tests
+#  plan:
+#  - get: project-app
+#    trigger: true
+#
+#  - task: test
+#    config:
+#      inputs:
+#        - name: project-app
+#      outputs:
+#        - name: project-app
+#      platform: linux
+#      image_resource:
+#        type: registry-image
+#        source:
+#          repository: maven
+#          tag: 3-jdk-8
+#      run:
+#        path: mvn
+#        args: [test]
+#        dir: project-app
 
 - name: build-app
   plan:
   - get: project-app
     trigger: true
-    passed: [tests]
+#    passed: [tests]
 
   - put: app-image
     params:
