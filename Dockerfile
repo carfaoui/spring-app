@@ -3,7 +3,6 @@ RUN mkdir /build
 WORKDIR /build
 COPY . /build
 
-RUN mvn test
 RUN mvn clean install
 
 FROM openjdk:8-jdk-alpine
