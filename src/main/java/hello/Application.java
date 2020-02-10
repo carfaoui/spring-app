@@ -11,6 +11,7 @@ public class Application {
 
 
     private String feature_2 ;
+    private String x;
 
 
     @RequestMapping("/")
