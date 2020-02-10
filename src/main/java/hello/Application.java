@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class Application {
 
 
-    private String feature_2
+    private String feature_2 ;
 
 
     @RequestMapping("/")
